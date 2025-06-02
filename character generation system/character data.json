@@ -1,0 +1,124 @@
+{
+  "race_templates": {
+	"Human": {
+	  "base_stats_range": {
+		"Diplomacy": [3, 7],
+		"Martial": [3, 7],
+		"Stewardship": [3, 7],
+		"Intrigue": [3, 7],
+		"Learning": [3, 7],
+		"Combat_HP": [80, 120],
+		"Combat_DMG": [8, 12]
+	  },
+	  "body_parts": {
+		"head": 1,
+		"torso": 1,
+		"arms": 2,
+		"legs": 2
+	  },
+	  "hormone_multiplier": {
+		"male": 1.1,
+		"female": 0.9
+	  }
+	},
+	"Orc": {
+	  "base_stats_range": {
+		"Diplomacy": [1, 4],
+		"Martial": [5, 9],
+		"Stewardship": [1, 4],
+		"Intrigue": [2, 5],
+		"Learning": [1, 3],
+		"Combat_HP": [120, 180],
+		"Combat_DMG": [12, 18]
+	  },
+	  "body_parts": {
+		"head": 1,
+		"torso": 1,
+		"arms": 2,
+		"legs": 2,
+		"tusks": 2
+	  },
+	  "hormone_multiplier": {
+		"male": 1.2,
+		"female": 1.0
+	  }
+	},
+	"Elf": {
+	  "base_stats_range": {
+		"Diplomacy": [4, 8],
+		"Martial": [2, 6],
+		"Stewardship": [3, 7],
+		"Intrigue": [5, 9],
+		"Learning": [5, 9],
+		"Combat_HP": [70, 100],
+		"Combat_DMG": [10, 15]
+	  },
+	  "body_parts": {
+		"head": 1,
+		"torso": 1,
+		"arms": 2,
+		"legs": 2,
+		"pointed_ears": 2
+	  },
+	  "hormone_multiplier": {
+		"male": 1.0,
+		"female": 1.0
+	  }
+	}
+  },
+  "childhood_backgrounds": [
+	"Orphaned",
+	"Noble Upbringing",
+	"Farmhand",
+	"Apprentice Scribe",
+	"Street Urchin"
+  ],
+  "adulthood_backgrounds": [
+	"Veteran Soldier",
+	"Traveling Merchant",
+	"Scholar",
+	"Thief",
+	"Hermit"
+  ],
+  "personality_traits": {
+	"Brave": {
+	  "stat_effects": {
+		"Martial": 1,
+		"Combat_DMG_bonus": 2
+	  }
+	},
+	"Cowardly": {
+	  "stat_effects": {
+		"Martial": -1,
+		"Combat_HP_penalty_percent": 0.1
+	  }
+	},
+	"Intelligent": {
+	  "stat_effects": {
+		"Learning": 2,
+		"Intrigue": 1
+	  }
+	}
+  },
+  "equipment_templates": {
+	"main_hand": [
+	  "Rusty Sword",
+	  "Iron Dagger",
+	  "Wooden Staff",
+	  "Shortbow"
+	],
+	"armor": [
+	  "Leather Vest",
+	  "Chainmail Shirt",
+	  "Robes"
+	],
+	"rings": [
+	  "Ring of Minor Protection",
+	  "Ring of Keen Sight"
+	],
+	"necklaces": [
+	  "Amulet of Health",
+	  "Pendant of Wisdom"
+	]
+  }
+}
