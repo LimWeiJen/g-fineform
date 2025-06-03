@@ -67,6 +67,46 @@ popup/item_2/id = 2
 popup/item_3/text = "Random"
 popup/item_3/id = 3
 
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+alignment = 1
+
+[node name="Interbreed" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Interbreed"
+
+[node name="Interbreed Panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -363.0
+offset_top = -164.0
+offset_right = 364.0
+offset_bottom = 164.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Interbreed Panel"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="OptionButton" type="OptionButton" parent="Interbreed Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OptionButton2" type="OptionButton" parent="Interbreed Panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Interbreed Panel/HBoxContainer"]
+layout_mode = 2
+text = "Interbreed"
+
 [node name="CharacterGenerationSystem" type="Node" parent="."]
 script = ExtResource("2_tw4px")
 metadata/_custom_type_script = "uid://ycs83crx55tf"

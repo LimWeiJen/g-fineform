@@ -9,7 +9,7 @@ var adulthood_backgrounds := []
 var personality_traits := {}
 var equipment_templates := {}
 
-var last_char_id = 0
+var last_char_id = -1
 
 func _ready():
 	randomize()
@@ -37,11 +37,10 @@ func load_character_data(path: String):
 
 func generate_character(is_hero: bool = true, specific_race: String = "") -> Character:
 	last_char_id += 1
-	var char_id = "char_" + str(last_char_id)
 
 	var character: Character = Character.new()
 
-	character.id = char_id
+	character.id = last_char_id
 	character.is_hero = is_hero
 	character.name = _generate_name()
 
@@ -140,6 +139,75 @@ func generate_character(is_hero: bool = true, specific_race: String = "") -> Cha
 	print("Generated Character: %s (%s %s)" % [character["name"], character["gender"], character["race"]])
 	# print_character_sheet(character) # For debugging
 	return character
+
+func interbreed_characters(parent1: Character, parent2: Character) -> Character:
+	var offspring: Character = Character.new()
+	last_char_id += 1
+	offspring.id = last_char_id
+
+	if parent1["race"] == parent2["race"]:
+		offspring["race"] = parent1["race"]
+	else:
+		offspring["race"] = "Half-" + parent1["race"] + "-" + parent2["race"]
+
+	offspring["gender"] = ["male", "female"][randi() % 2]
+	offspring["name"] = _generate_name()
+
+	# Inherit stats, traits, etc. (simplified)
+	# Inherit base_stats (averaging values)
+	offspring.base_stats = {}
+	for key in parent1.base_stats.keys():
+		if parent2.base_stats.has(key):
+			offspring.base_stats[key] = (parent1.base_stats[key] + parent2.base_stats[key]) / 2
+		else:
+			offspring.base_stats[key] = parent1.base_stats[key]
+
+	# Same for final_stats and combat_stats (can also average or recalculate from base_stats)
+	offspring.final_stats = {}
+	offspring.combat_stats = {}
+	for stats_name in ["final_stats", "combat_stats"]:
+		offspring[stats_name] = {}
+		for key in parent1[stats_name].keys():
+			if parent2[stats_name].has(key):
+				offspring[stats_name][key] = (parent1[stats_name][key] + parent2[stats_name][key]) / 2
+			else:
+				offspring[stats_name][key] = parent1[stats_name][key]
+
+	# Merge personality traits (randomly pick, combine or mutate)
+	offspring.personality_traits = []
+	var combined_traits = parent1.personality_traits + parent2.personality_traits
+	combined_traits = combined_traits.duplicate()
+	combined_traits.shuffle()
+	offspring.personality_traits = combined_traits.slice(0, 3)  # pick top 3 traits, for example
+
+	# Inherit equipment (random choice from either parent)
+	offspring.equipment = {}
+	for slot in parent1.equipment.keys():
+		if parent2.equipment.has(slot):
+			offspring.equipment[slot] = parent1.equipment[slot] if randf() > 0.5 else parent2.equipment[slot]
+		else:
+			offspring.equipment[slot] = parent1.equipment[slot]
+
+	# Inherit body parts (random or blend logic)
+	offspring.body_parts = {}
+	for part in parent1.body_parts.keys():
+		if parent2.body_parts.has(part):
+			offspring.body_parts[part] = parent1.body_parts[part] if randf() > 0.5 else parent2.body_parts[part]
+		else:
+			offspring.body_parts[part] = parent1.body_parts[part]
+
+	offspring.description = _generate_description(offspring)
+
+	# Background effects (simplified: +/- 1 to a random stat)
+	for _bg_type in ["childhood_bg", "adulthood_bg"]:
+		var random_stat_idx = randi() % offspring["final_stats"].keys().size()
+		var stat_to_modify = offspring["final_stats"].keys()[random_stat_idx]
+		if not stat_to_modify.begins_with("Combat_"): # Don't modify HP/DMG this way directly
+			offspring["final_stats"][stat_to_modify] += randi_range(-1, 1)
+			offspring["final_stats"][stat_to_modify] = max(1, offspring["final_stats"][stat_to_modify]) # Min 1
+
+	return offspring
+
 
 func _generate_name() -> String:
 	# Simple name generator

@@ -1,24 +1,46 @@
 extends Control
 
 @onready var generate_button: Button = $PanelContainer/VBoxContainer/HBoxContainer/Button
+@onready var interbreed_button: Button = $PanelContainer/VBoxContainer/HBoxContainer3/Interbreed
 @onready var hero_checkbox: CheckBox = $PanelContainer/VBoxContainer/HBoxContainer/CheckBox
 @onready var race_option_button: OptionButton = $PanelContainer/VBoxContainer/HBoxContainer/OptionButton
 @onready var characters_list: VBoxContainer = $PanelContainer/VBoxContainer/HBoxContainer2/VBoxContainer
 @onready var label: Label = $PanelContainer/VBoxContainer/HBoxContainer2/ScrollContainer/Label
+@onready var interbreed_panel = $"Interbreed Panel"
+@onready var parent1_select: OptionButton = $"Interbreed Panel/HBoxContainer/OptionButton"
+@onready var parent2_select: OptionButton = $"Interbreed Panel/HBoxContainer/OptionButton2"
+@onready var start_interbreed_button: Button = $"Interbreed Panel/HBoxContainer/Button"
 
 @onready var character_generator: CharacterGenerationSystem = $CharacterGenerationSystem
-
-var characters: Array[Character] = []
 
 var curr_character: Character
 
 func _ready():
 	generate_button.connect("pressed", generate_char)
+	interbreed_button.connect("pressed", show_interbreed_panel)
+	start_interbreed_button.connect("pressed", interbreed)
+
+func interbreed():
+	var parent1 = GlobalGameData.characters[parent1_select.get_selected_id()-1]
+	var parent2 = GlobalGameData.characters[parent2_select.get_selected_id()-1]
+	var new_char = character_generator.interbreed_characters(parent1, parent2)
+	display_character(new_char)
+	curr_character = new_char
+	save_char()
+	interbreed_panel.visible = false
+
+func show_interbreed_panel():
+	interbreed_panel.visible = true
+	parent1_select.clear()
+	parent2_select.clear()
+	for character in GlobalGameData.characters:
+		parent1_select.add_item(character.name, character.id)
+		parent2_select.add_item(character.name, character.id)
 
 func list_out_all_char():
 	for child in characters_list.get_children():
 		child.queue_free()
-	for character in characters:
+	for character in GlobalGameData.characters:
 		var btn = Button.new()
 		btn.name = str(character.id)
 		btn.text = character.name
@@ -48,7 +70,7 @@ func display_character(character):
 	label.text = display_text
 
 func get_char(id: int):
-	curr_character = characters[id-1]
+	curr_character = GlobalGameData.characters[id]
 	display_character(curr_character)
 
 func generate_char():
@@ -62,5 +84,5 @@ func generate_char():
 	save_char()
 
 func save_char():
-	characters.append(curr_character)
+	GlobalGameData.characters.append(curr_character)
 	list_out_all_char()

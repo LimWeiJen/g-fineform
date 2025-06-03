@@ -14,3 +14,7 @@ config/name="G-FineForm"
 run/main_scene="uid://bkc0wx37d30i2"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GlobalGameData="*res://global game data/global game data.gd"

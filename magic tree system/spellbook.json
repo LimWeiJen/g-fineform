@@ -1,0 +1,62 @@
+{
+	"Summoning": {
+		"SummonImp": {
+			"xp_cost": 100.0,
+			"prerequisites": [],
+			"effect_type": "summon_unit",
+			"unit_id": "imp",
+			"duration": 60.0,
+			"description": "Summons a weak Imp for a short duration."
+		},
+		"StrengthenSummon": {
+			"xp_cost": 250.0,
+			"prerequisites": [
+				"SummonImp"
+			],
+			"effect_type": "buff_summons",
+			"stat_boost": {
+				"damage": 5.0
+			},
+			"description": "Temporarily boosts damage of active summons."
+		}
+	},
+	"Elemental": {
+		"Fireball": {
+			"xp_cost": 150.0,
+			"prerequisites": [],
+			"effect_type": "direct_damage",
+			"damage_type": "fire",
+			"base_damage": 30.0,
+			"description": "Hurls a fiery projectile at an enemy."
+		},
+		"IceShard": {
+			"xp_cost": 120.0,
+			"prerequisites": [],
+			"effect_type": "direct_damage_status",
+			"damage_type": "ice",
+			"base_damage": 15.0,
+			"status_effect": "slow",
+			"duration": 10.0,
+			"description": "Launches an ice shard that can slow enemies."
+		}
+	},
+	"MindControl": {
+		"LesserCharm": {
+			"xp_cost": 200.0,
+			"prerequisites": [],
+			"effect_type": "convert_attempt",
+			"max_target_level": 5.0,
+			"success_chance_base": 0.3,
+			"description": "Attempts to charm a weak enemy to your side temporarily."
+		},
+		"FearAura": {
+			"xp_cost": 300.0,
+			"prerequisites": [],
+			"effect_type": "aoe_status_effect",
+			"status_effect": "fear",
+			"radius": 5.0,
+			"duration": 15.0,
+			"description": "Causes nearby weak enemies to flee in terror."
+		}
+	}
+}
