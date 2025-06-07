@@ -59,15 +59,9 @@ func generate_character(is_hero: bool = true, specific_race: String = "") -> Cha
 	# 4. Base Stats from Race Template
 	for stat_name in template["base_stats_range"]:
 		var s_range = template["base_stats_range"][stat_name]
-		character["base_stats"][stat_name] = randi_range(s_range[0], s_range[1])
+		character["stats"][stat_name] = randi_range(s_range[0], s_range[1])
 	
-	# Initial combat stats (can be simple or complex)
-	var combat_stats = {
-		"hp": character["base_stats"].get("Combat_HP", 100),
-		"max_hp": character["base_stats"].get("Combat_HP", 100),
-		"damage": character["base_stats"].get("Combat_DMG", 10),
-		"defense": randi_range(1,5) # Example
-	}
+	character["stats"]["defense"] = randi_range(1, 5)
 
 	# 5. Personality Traits (1-2 traits)
 	var num_traits = randi_range(1, 2)
@@ -93,21 +87,19 @@ func generate_character(is_hero: bool = true, specific_race: String = "") -> Cha
 
 
 	# 8. Stat Calculator (Race + Hormone Multiplier + Background + Traits)
-	character["final_stats"] = character["base_stats"].duplicate(true)
 	
 	# Hormone multiplier (example for combat stats)
 	var hormone_mult = template.get("hormone_multiplier", {}).get(character["gender"], 1.0)
-	combat_stats["hp"] = int(combat_stats["hp"] * hormone_mult)
-	combat_stats["max_hp"] = combat_stats["hp"]
-	combat_stats["damage"] = int(combat_stats["damage"] * hormone_mult)
+	character["stats"]["Combat_HP"] *= hormone_mult
+	character["stats"]["Combat_DMG"] *= hormone_mult
 
 	# Background effects (simplified: +/- 1 to a random stat)
 	for _bg_type in ["childhood_bg", "adulthood_bg"]:
-		var random_stat_idx = randi() % character["final_stats"].keys().size()
-		var stat_to_modify = character["final_stats"].keys()[random_stat_idx]
-		if not stat_to_modify.begins_with("Combat_"): # Don't modify HP/DMG this way directly
-			character["final_stats"][stat_to_modify] += randi_range(-1, 1)
-			character["final_stats"][stat_to_modify] = max(1, character["final_stats"][stat_to_modify]) # Min 1
+		var random_stat_idx = randi() % character["stats"].keys().size()
+		var stat_to_modify = character["stats"].keys()[random_stat_idx]
+		if not stat_to_modify.begins_with("Combat_"): 
+			character["stats"][stat_to_modify] += randi_range(-1, 1)
+			character["stats"][stat_to_modify] = max(1, character["stats"][stat_to_modify]) # Min 1
 
 	# Trait effects
 	for trait_name_str in character["personality_traits"]: # Ensure trait_name_str is a string
@@ -115,15 +107,12 @@ func generate_character(is_hero: bool = true, specific_race: String = "") -> Cha
 		for stat_effect_name in trait_data.get("stat_effects", {}):
 			var effect_value = trait_data["stat_effects"][stat_effect_name]
 			if stat_effect_name == "Combat_HP_penalty_percent":
-				combat_stats["hp"] = int(combat_stats["hp"] * (1.0 - effect_value))
-				combat_stats["max_hp"] = combat_stats["hp"]
+				character["stats"]["Combat_HP"] *= (1.0 - effect_value)
 			elif stat_effect_name == "Combat_DMG_bonus":
-				combat_stats["damage"] += effect_value
-			elif character["final_stats"].has(stat_effect_name):
-				character["final_stats"][stat_effect_name] += effect_value
-				character["final_stats"][stat_effect_name] = max(1, character["final_stats"][stat_effect_name])
-
-	character["combat_stats"] = combat_stats
+				character["stats"]["Combat_DMG"] += effect_value
+			elif character["stats"].has(stat_effect_name):
+				character["stats"][stat_effect_name] += effect_value
+				character["stats"][stat_effect_name] = max(1, character["stats"][stat_effect_name])
 
 	# 9. Description Generator
 	character["description"] = _generate_description(character)
@@ -155,23 +144,12 @@ func interbreed_characters(parent1: Character, parent2: Character) -> Character:
 
 	# Inherit stats, traits, etc. (simplified)
 	# Inherit base_stats (averaging values)
-	offspring.base_stats = {}
-	for key in parent1.base_stats.keys():
-		if parent2.base_stats.has(key):
-			offspring.base_stats[key] = (parent1.base_stats[key] + parent2.base_stats[key]) / 2
+	offspring.stats = {}
+	for key in parent1.stats.keys():
+		if parent2.stats.has(key):
+			offspring.stats[key] = (parent1.stats[key] + parent2.stats[key]) / 2
 		else:
-			offspring.base_stats[key] = parent1.base_stats[key]
-
-	# Same for final_stats and combat_stats (can also average or recalculate from base_stats)
-	offspring.final_stats = {}
-	offspring.combat_stats = {}
-	for stats_name in ["final_stats", "combat_stats"]:
-		offspring[stats_name] = {}
-		for key in parent1[stats_name].keys():
-			if parent2[stats_name].has(key):
-				offspring[stats_name][key] = (parent1[stats_name][key] + parent2[stats_name][key]) / 2
-			else:
-				offspring[stats_name][key] = parent1[stats_name][key]
+			offspring.stats[key] = parent1.stats[key]
 
 	# Merge personality traits (randomly pick, combine or mutate)
 	offspring.personality_traits = []
@@ -200,11 +178,11 @@ func interbreed_characters(parent1: Character, parent2: Character) -> Character:
 
 	# Background effects (simplified: +/- 1 to a random stat)
 	for _bg_type in ["childhood_bg", "adulthood_bg"]:
-		var random_stat_idx = randi() % offspring["final_stats"].keys().size()
-		var stat_to_modify = offspring["final_stats"].keys()[random_stat_idx]
+		var random_stat_idx = randi() % offspring["stats"].keys().size()
+		var stat_to_modify = offspring["stats"].keys()[random_stat_idx]
 		if not stat_to_modify.begins_with("Combat_"): # Don't modify HP/DMG this way directly
-			offspring["final_stats"][stat_to_modify] += randi_range(-1, 1)
-			offspring["final_stats"][stat_to_modify] = max(1, offspring["final_stats"][stat_to_modify]) # Min 1
+			offspring["stats"][stat_to_modify] += randi_range(-1, 1)
+			offspring["stats"][stat_to_modify] = max(1, offspring["stats"][stat_to_modify]) # Min 1
 
 	return offspring
 

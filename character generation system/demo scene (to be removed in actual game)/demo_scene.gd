@@ -55,8 +55,8 @@ func display_character(character):
 	display_text += "Race: %s, Gender: %s \n" % [character["race"], character["gender"]]
 	display_text += "Backgrounds: %s (Childhood), %s (Adulthood) \n" % [character["childhood_bg"], character["adulthood_bg"]]
 	display_text += "Stats: \n"
-	for stat_name in character["final_stats"]:
-		display_text += "  %s: %s \n" % [stat_name.capitalize(), character["final_stats"][stat_name]]
+	for stat_name in character["stats"]:
+		display_text += "  %s: %s \n" % [stat_name.capitalize(), character["stats"][stat_name]]
 	display_text += "Personality Traits: %s \n" % ", ".join(character["personality_traits"])
 	display_text += "Equipment: \n"
 	for slot in character["equipment"]:
@@ -70,7 +70,7 @@ func display_character(character):
 	label.text = display_text
 
 func get_char(id: int):
-	curr_character = GlobalGameData.characters[id]
+	curr_character = GlobalGameData.characters.filter(func (character): return character.id == id)[0]
 	display_character(curr_character)
 
 func generate_char():

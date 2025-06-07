@@ -13,7 +13,7 @@
 			"prerequisites": [
 				"SummonImp"
 			],
-			"effect_type": "buff_summons",
+			"effect_type": "summon_unit",
 			"stat_boost": {
 				"damage": 5.0
 			},
@@ -32,12 +32,11 @@
 		"IceShard": {
 			"xp_cost": 120.0,
 			"prerequisites": [],
-			"effect_type": "direct_damage_status",
+			"effect_type": "direct_damage",
 			"damage_type": "ice",
-			"base_damage": 15.0,
-			"status_effect": "slow",
+			"base_damage": 45.0,
 			"duration": 10.0,
-			"description": "Launches an ice shard that can slow enemies."
+			"description": "Launches an ice shard at the enemy"
 		}
 	},
 	"MindControl": {
@@ -46,16 +45,15 @@
 			"prerequisites": [],
 			"effect_type": "convert_attempt",
 			"max_target_level": 5.0,
-			"success_chance_base": 0.3,
+			"success_chance": 0.3,
 			"description": "Attempts to charm a weak enemy to your side temporarily."
 		},
 		"FearAura": {
 			"xp_cost": 300.0,
 			"prerequisites": [],
-			"effect_type": "aoe_status_effect",
+			"effect_type": "remove_monster",
+			"success_chance": 0.5,
 			"status_effect": "fear",
-			"radius": 5.0,
-			"duration": 15.0,
 			"description": "Causes nearby weak enemies to flee in terror."
 		}
 	}

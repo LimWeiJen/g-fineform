@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3 uid="uid://bj1yxl2lk0wde"]
+
+[ext_resource type="PackedScene" uid="uid://snhlxoxmlnu7" path="res://combat system/demo scene (to be removed)/demo.tscn" id="1_bew6c"]
+[ext_resource type="Script" uid="uid://c64inj8kod8nl" path="res://overall demo scene/demo.gd" id="1_gr71j"]
+[ext_resource type="PackedScene" uid="uid://btreqx130qfwr" path="res://magic tree system/demo scene (to be removed)/demo_scene.tscn" id="1_hsfhu"]
+[ext_resource type="PackedScene" uid="uid://bkc0wx37d30i2" path="res://character generation system/demo scene (to be removed in actual game)/demo_scene.tscn" id="1_mcyrk"]
+[ext_resource type="PackedScene" uid="uid://y7kmnd3ivo8m" path="res://overworld combat system/demo/demo.tscn" id="5_6gxqj"]
+
+[node name="Demo" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gr71j")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 648.0
+current_tab = 2
+
+[node name="Magic Tree System" parent="TabContainer" instance=ExtResource("1_hsfhu")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="MagicTreeSystem" parent="TabContainer/Magic Tree System" index="1" node_paths=PackedStringArray("active_overworld_combat_system", "active_combat_system")]
+active_overworld_combat_system = NodePath("../../Overworld Combat System/OverWorldCombatSystem")
+active_combat_system = NodePath("../../Combat System/CombatSystem")
+
+[node name="Combat System" parent="TabContainer" instance=ExtResource("1_bew6c")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Character Generation System" parent="TabContainer" instance=ExtResource("1_mcyrk")]
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Overworld Combat System" parent="TabContainer" instance=ExtResource("5_6gxqj")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]
+
+[editable path="TabContainer/Magic Tree System"]
+[editable path="TabContainer/Combat System"]
+[editable path="TabContainer/Character Generation System"]
+[editable path="TabContainer/Overworld Combat System"]
